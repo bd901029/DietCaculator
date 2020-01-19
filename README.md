@@ -1,6 +1,6 @@
-# diet_calculator
+# Diet Calculator
 
-Diet Calculator
+Total Food Calories Calculator
 
 ## Getting Started
 
