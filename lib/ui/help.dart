@@ -1,5 +1,7 @@
+import 'package:diet_calculator/engine/urlManager.dart';
 import 'package:flutter/material.dart';
-import 'homeScreen.dart';
+import 'home.dart';
+import 'splash.dart';
 
 class HelpPage extends StatefulWidget {
 	HelpPage({Key key, this.title}) : super(key: key);
@@ -20,12 +22,26 @@ class HelpPage extends StatefulWidget {
 }
 
 class HelpPageState extends State<HelpPage> {
-	int counter = 0;
+	@override
+	void initState() {
+		super.initState();
+
+		UrlManager.sharedInstance().addListener(onUrlReceived);
+		UrlManager.sharedInstance().startTimer();
+	}
 
 	void onNextBtnTapped() {
 		Navigator.push(
 			context,
-			MaterialPageRoute(builder: (context) => HomePage(title: 'Diet Calculator')),
+			MaterialPageRoute(builder: (context) => HomePage()),
+		);
+	}
+	
+	onUrlReceived() {
+		print("Opening Splash....");
+		Navigator.push(
+			context,
+			MaterialPageRoute(builder: (context) => SplashPage()),
 		);
 	}
 

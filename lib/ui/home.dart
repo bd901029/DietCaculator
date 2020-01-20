@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:diet_calculator/engine/Food.dart';
-import 'package:diet_calculator/engine/FoodManager.dart';
+import 'package:diet_calculator/engine/food.dart';
+import 'package:diet_calculator/engine/foodManager.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 class HomePage extends StatefulWidget {
 	HomePage({Key key, this.title}) : super(key: key);
@@ -22,7 +23,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-
 	final myController = TextEditingController();
 
 	final foodManager = FoodManager();
@@ -52,7 +52,7 @@ class HomePageState extends State<HomePage> {
 		String key = myController.text;
 		if (key == null || key == "") {
 			setState(() {
-			  searchResults = [];
+				searchResults = [];
 			});
 			return;
 		}
@@ -65,22 +65,23 @@ class HomePageState extends State<HomePage> {
 			return;
 		}
 
-		double calories = 0;
+		int calories = 0;
 		for (var food in foods) {
-			calories += food.calories;
+			calories = calories + food.calories;
 		}
 
 		setState(() {
 			foods.add(searchResults[index]);
 			searchResults = [];
 			myController.text = "";
-			totalCalories = calories.toInt();
+			totalCalories = calories;
 		});
 	}
 
 	Future<void> onBarcodeBtnTapped() async {
-//		String barcode = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", false, ScanMode.DEFAULT);
-//		foodManager.searchByBarcode(barcode);
+		String barcode = await FlutterBarcodeScanner.scanBarcode(
+			"#ff6666", "Cancel", false, ScanMode.DEFAULT);
+		foodManager.searchByBarcode(barcode);
 	}
 
 	void onSearchFinished() {
@@ -109,15 +110,15 @@ class HomePageState extends State<HomePage> {
 					Container(
 						margin: EdgeInsets.symmetric(vertical: 20),
 						alignment: Alignment.center,
-						child: Text("Total Caloies: $totalCalories", style: TextStyle(color: Colors.blue, fontSize: 30)),
+						child: Text("Total Caloies: $totalCalories",
+							style: TextStyle(color: Colors.blue, fontSize: 30)),
 					),
 					Container(
 						margin: EdgeInsets.symmetric(horizontal: 20),
 						alignment: Alignment.center,
 						decoration: BoxDecoration(
 							color: Color.fromARGB(50, 0, 0, 0),
-							borderRadius: BorderRadius.all(Radius.circular(10))
-						),
+							borderRadius: BorderRadius.all(Radius.circular(10))),
 						child: Row(
 							crossAxisAlignment: CrossAxisAlignment.start,
 							children: <Widget>[
@@ -140,32 +141,39 @@ class HomePageState extends State<HomePage> {
 					),
 					Expanded(
 						child: Padding(
-							padding: EdgeInsets.symmetric(horizontal: 20),
+							padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
 							child: ListView.builder(
 								scrollDirection: Axis.vertical,
-								itemCount: searchResults.length > 0 ? searchResults.length : foods.length,
+								itemCount: searchResults.length > 0
+									? searchResults.length
+									: foods.length,
 								itemBuilder: (BuildContext context, int index) {
 									return ListTile(
-										leading: CachedNetworkImage(
-											errorWidget: (context, url, error) => Icon(Icons.error),
-											imageUrl: "${searchResults.length > 0 ? searchResults[index].imageUrl : foods[index].imageUrl}",
+										leading: Padding(
+											padding: EdgeInsets.all(10),
+											child: CachedNetworkImage(
+												errorWidget: (context, url, error) =>
+													Icon(Icons.error),
+												imageUrl:
+												"${searchResults.length > 0 ? searchResults[index].imageUrl : foods[index].imageUrl}",
+											),
 										),
-										title: Text("${searchResults.length > 0 ? searchResults[index].name : foods[index].name}"),
+										title: Text(
+											"${searchResults.length > 0 ? searchResults[index].name : foods[index].name}"),
+										trailing: Text("${searchResults.length > 0 ? searchResults[index].calories : foods[index].calories}"),
 										onTap: () {
-											if (searchResults.length <= 0)
-												return;
+											if (searchResults.length <= 0) return;
 											onSearchResultSelected(index);
 										},
 									);
-								}
-							),
+								}),
 						),
 					),
 				],
 			),
 			floatingActionButton: FloatingActionButton(
 				onPressed: onBarcodeBtnTapped,
-				tooltip: 'Add',
+				tooltip: 'Scan Barcode',
 				child: Icon(Icons.photo_camera),
 			), // This trailing comma makes auto-formatting nicer for build methods.
 		);

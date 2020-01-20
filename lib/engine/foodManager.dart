@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:ffi';
 
-import 'package:diet_calculator/engine/Food.dart';
+import 'package:diet_calculator/engine/food.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
@@ -15,8 +15,11 @@ class FoodManager extends ChangeNotifier {
 		final String url = "https://trackapi.nutritionix.com/v2/search/instant";
 		final response = await http.post(url,
 			body: jsonEncode({"query": key, "branded": true, "detailed": true}),
-			headers: {"Content-Type": "application/json", "x-app-id": NUTRITIONIX_ID, "x-app-key": NUTRITIONIX_KEY}
-		);
+			headers: {
+				"Content-Type": "application/json",
+				"x-app-id": NUTRITIONIX_ID,
+				"x-app-key": NUTRITIONIX_KEY
+			});
 		final responseJson = json.decode(response.body);
 		if (responseJson == null || responseJson["branded"] == null) {
 			return;
@@ -35,11 +38,13 @@ class FoodManager extends ChangeNotifier {
 	}
 
 	void searchByBarcode(String barcode) async {
-		String url = "https://trackapi.nutritionix.com/v2/search/item?upc=" + barcode;
-		final response = await http.post(url,
-			body: jsonEncode({"upc": barcode}),
-			headers: {"Content-Type": "application/json", "x-app-id": NUTRITIONIX_ID, "x-app-key": NUTRITIONIX_KEY}
-		);
+		String url =
+			"https://trackapi.nutritionix.com/v2/search/item?upc=" + barcode;
+		final response = await http.get(url, headers: {
+			"Content-Type": "application/json",
+			"x-app-id": NUTRITIONIX_ID,
+			"x-app-key": NUTRITIONIX_KEY
+		});
 		final responseJson = json.decode(response.body);
 		if (responseJson == null || responseJson["foods"] == null) {
 			return;
