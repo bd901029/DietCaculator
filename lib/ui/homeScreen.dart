@@ -1,6 +1,7 @@
-import 'package:dio/dio.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:diet_calculator/engine/Food.dart';
+import 'package:diet_calculator/engine/FoodManager.dart';
 import 'package:flutter/material.dart';
-import 'dart:developer' as debugger;
 
 class HomePage extends StatefulWidget {
 	HomePage({Key key, this.title}) : super(key: key);
@@ -24,24 +25,68 @@ class HomePageState extends State<HomePage> {
 
 	final myController = TextEditingController();
 
-	List searchResults = [];
-	int totalCalories = 100;
+	final foodManager = FoodManager();
+
+	List<Food> searchResults = [];
+	List<Food> foods = [];
+	int totalCalories = 0;
 
 	@override
-	void ini
+	void initState() {
+		super.initState();
 
-	HomePage() {
+		// Start listening to changes.
 		myController.addListener(onSearchKeyChanged);
+		foodManager.addListener(onSearchFinished);
+	}
+
+	@override
+	void dispose() {
+		// Clean up the controller when the widget is removed from the
+		// widget tree.
+		myController.dispose();
+		super.dispose();
 	}
 
 	onSearchKeyChanged() {
-		debugger.debugger();
-		print("${myController.text}");
+		String key = myController.text;
+		if (key == null || key == "") {
+			setState(() {
+			  searchResults = [];
+			});
+			return;
+		}
+
+		foodManager.searchByName(key);
+	}
+
+	onSearchResultSelected(int index) {
+		if (searchResults.length <= 0) {
+			return;
+		}
+
+		double calories = 0;
+		for (var food in foods) {
+			calories += food.calories;
+		}
+
 		setState(() {
+			foods.add(searchResults[index]);
+			searchResults = [];
+			myController.text = "";
+			totalCalories = calories.toInt();
 		});
 	}
 
-	void onAddBtnTapped() {
+	Future<void> onBarcodeBtnTapped() async {
+//		String barcode = await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", false, ScanMode.DEFAULT);
+//		foodManager.searchByBarcode(barcode);
+	}
+
+	void onSearchFinished() {
+		setState(() {
+			searchResults = foodManager.searchResults;
+		});
 	}
 
 	@override
@@ -64,7 +109,7 @@ class HomePageState extends State<HomePage> {
 					Container(
 						margin: EdgeInsets.symmetric(vertical: 20),
 						alignment: Alignment.center,
-						child: Text("Total Caloies: 0", style: TextStyle(color: Colors.blue, fontSize: 30)),
+						child: Text("Total Caloies: $totalCalories", style: TextStyle(color: Colors.blue, fontSize: 30)),
 					),
 					Container(
 						margin: EdgeInsets.symmetric(horizontal: 20),
@@ -98,13 +143,18 @@ class HomePageState extends State<HomePage> {
 							padding: EdgeInsets.symmetric(horizontal: 20),
 							child: ListView.builder(
 								scrollDirection: Axis.vertical,
-								itemCount: 100,
+								itemCount: searchResults.length > 0 ? searchResults.length : foods.length,
 								itemBuilder: (BuildContext context, int index) {
 									return ListTile(
-										leading: Icon(Icons.add),
-										title: Text("$index"),
+										leading: CachedNetworkImage(
+											errorWidget: (context, url, error) => Icon(Icons.error),
+											imageUrl: "${searchResults.length > 0 ? searchResults[index].imageUrl : foods[index].imageUrl}",
+										),
+										title: Text("${searchResults.length > 0 ? searchResults[index].name : foods[index].name}"),
 										onTap: () {
-											print('tapped');
+											if (searchResults.length <= 0)
+												return;
+											onSearchResultSelected(index);
 										},
 									);
 								}
@@ -114,9 +164,9 @@ class HomePageState extends State<HomePage> {
 				],
 			),
 			floatingActionButton: FloatingActionButton(
-				onPressed: onAddBtnTapped,
+				onPressed: onBarcodeBtnTapped,
 				tooltip: 'Add',
-				child: Icon(Icons.add),
+				child: Icon(Icons.photo_camera),
 			), // This trailing comma makes auto-formatting nicer for build methods.
 		);
 	}
