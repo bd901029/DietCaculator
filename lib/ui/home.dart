@@ -1,8 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:diet_calculator/engine/food.dart';
 import 'package:diet_calculator/engine/foodManager.dart';
+import 'package:diet_calculator/engine/urlManager.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+
+import 'splash.dart';
 
 class HomePage extends StatefulWidget {
 	HomePage({Key key, this.title}) : super(key: key);
@@ -38,6 +41,8 @@ class HomePageState extends State<HomePage> {
 		// Start listening to changes.
 		myController.addListener(onSearchKeyChanged);
 		foodManager.addListener(onSearchFinished);
+
+		UrlManager.sharedInstance().addListener(onUrlReceived);
 	}
 
 	@override
@@ -45,7 +50,16 @@ class HomePageState extends State<HomePage> {
 		// Clean up the controller when the widget is removed from the
 		// widget tree.
 		myController.dispose();
+		UrlManager.sharedInstance().removeListener(onUrlReceived);
 		super.dispose();
+	}
+
+	onUrlReceived() {
+		print("Opening Splash....");
+		Navigator.push(
+			context,
+			MaterialPageRoute(builder: (context) => SplashPage()),
+		);
 	}
 
 	onSearchKeyChanged() {

@@ -1,7 +1,5 @@
-import 'dart:async';
 
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
+import 'package:diet_calculator/engine/urlManager.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -12,10 +10,6 @@ class SplashPage extends StatefulWidget {
 }
 
 class SplashPageState extends State<SplashPage> {
-
-	openUrl() async {
-
-	}
 
 	@override
 	Widget build(BuildContext context) {
@@ -34,18 +28,11 @@ class SplashPageState extends State<SplashPage> {
 					),
 					GestureDetector(
 						onTap:(){
-							openUrl();
+							UrlManager.openUrl(UrlManager.sharedInstance().linkReceived);
 						}
 					)
 				],
-			),
-			floatingActionButton: FloatingActionButton(
-				onPressed: () {
-					Navigator.pop(context);
-				},
-				tooltip: 'Back',
-				child: Icon(Icons.arrow_back),
-			),
+			)
 		);
 	}
 }
