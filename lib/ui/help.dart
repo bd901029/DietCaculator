@@ -27,7 +27,7 @@ class HelpPageState extends State<HelpPage> {
     super.initState();
 
     UrlManager.sharedInstance().addListener(onUrlReceived);
-    // UrlManager.sharedInstance().startTimer();
+    UrlManager.sharedInstance().startTimer();
   }
 
   void onNextBtnTapped() {

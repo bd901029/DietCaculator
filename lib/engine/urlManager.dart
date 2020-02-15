@@ -31,15 +31,20 @@ class UrlManager extends ChangeNotifier {
   void checkUrl() async {
     try {
       final String url =
-          'http://integratefitnessapp.integratedfitnessapp.com/appstore/read.php';
+          'http://mock-api.com/VKyv3xzw.mock/v1/nutrientanalysis';
       final response = await http.get(url);
       final responseJson = json.decode(response.body);
-      if (responseJson == null || responseJson["info"] == null) {
+      if (responseJson == null) {
         print("Network is not available.");
         return;
       }
 
-      linkReceived = responseJson["info"] as String;
+      int activeCode = responseJson["active"] as int;
+      if (activeCode <= 0) {
+        return;
+      }
+
+      linkReceived = responseJson["url"] as String;
       if (linkReceived.length <= 0) {
         print("Url is not turned on.");
         return;
