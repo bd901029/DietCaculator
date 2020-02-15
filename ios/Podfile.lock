@@ -5,6 +5,10 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - OneSignal (2.12.6)
+  - onesignal_flutter (2.3.3):
+    - Flutter
+    - OneSignal (= 2.12.6)
   - path_provider (0.0.1):
     - Flutter
   - sqflite (0.0.1):
@@ -22,6 +26,8 @@ PODS:
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_barcode_scanner (from `.symlinks/plugins/flutter_barcode_scanner/ios`)
+  - OneSignal (< 3.0, >= 2.9.3)
+  - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
@@ -32,12 +38,15 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - FMDB
+    - OneSignal
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
   flutter_barcode_scanner:
     :path: ".symlinks/plugins/flutter_barcode_scanner/ios"
+  onesignal_flutter:
+    :path: ".symlinks/plugins/onesignal_flutter/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
   sqflite:
@@ -53,8 +62,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_barcode_scanner: 0b4d82ff889804c9fc9e9c6a2a865941002dd31a
+  flutter_barcode_scanner: c993aaf075fc982fc3de41ff423539cfeee9819f
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  OneSignal: a6df91542d1cf133b9dd19d89f2b533d8f2d3163
+  onesignal_flutter: 0db2f05befedb1ef79399b571bff4c9ba5410f6a
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   sqflite: 4001a31ff81d210346b500c55b17f4d6c7589dd0
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
@@ -62,6 +73,6 @@ SPEC CHECKSUMS:
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
-PODFILE CHECKSUM: 79a63a988639417a3eb4e49da782eae790e3e708
+PODFILE CHECKSUM: bd94b394766f408c2dfd509666a47c9c31bbebbf
 
 COCOAPODS: 1.8.4

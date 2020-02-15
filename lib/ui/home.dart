@@ -78,14 +78,14 @@ class HomePageState extends State<HomePage> {
 		if (searchResults.length <= 0) {
 			return;
 		}
-
+		
+		foods.add(searchResults[index]);
 		int calories = 0;
 		for (var food in foods) {
 			calories = calories + food.calories;
 		}
 
 		setState(() {
-			foods.add(searchResults[index]);
 			searchResults = [];
 			myController.text = "";
 			totalCalories = calories;
