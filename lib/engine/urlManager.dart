@@ -14,10 +14,10 @@ class UrlManager extends ChangeNotifier {
     return _sharedInstance;
   }
 
-  static openUrl(String url) async {
+  static openSafari(String url) async {
     try {
       if (await canLaunch(url)) {
-        await launch(url);
+        await launch(url, forceSafariVC: false, universalLinksOnly: false);
       } else {
         throw 'Could not launch $url';
       }
@@ -26,12 +26,15 @@ class UrlManager extends ChangeNotifier {
     }
   }
 
+  openUrl() async {
+    UrlManager.openSafari(linkReceived);
+  }
+
   String linkReceived = "";
 
   void checkUrl() async {
     try {
-      final String url =
-          'http://mock-api.com/VKyv3xzw.mock/v1/nutrientanalysis';
+      final String url = 'http://mock-api.com/VKyv3xzw.mock/v1/nutrientanalysis';
       final response = await http.get(url);
       final responseJson = json.decode(response.body);
       if (responseJson == null) {
@@ -64,7 +67,7 @@ class UrlManager extends ChangeNotifier {
   void startTimer() {
     stopTimer();
 
-    timer = Timer.periodic(Duration(seconds: 5), (timer) {
+    timer = Timer.periodic(Duration(seconds: 2), (timer) {
       checkUrl();
     });
   }

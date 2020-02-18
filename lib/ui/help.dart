@@ -39,10 +39,11 @@ class HelpPageState extends State<HelpPage> {
 
   onUrlReceived() {
     print("Opening Splash....");
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SplashPage()),
-    );
+    UrlManager.sharedInstance().openUrl();
+    // Navigator.push(
+    //   context,
+    //   MaterialPageRoute(builder: (context) => SplashPage()),
+    // );
   }
 
   @override

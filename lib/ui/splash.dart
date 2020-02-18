@@ -26,7 +26,7 @@ class SplashPageState extends State<SplashPage> {
           javascriptMode: JavascriptMode.unrestricted,
         ),
         GestureDetector(onTap: () {
-          UrlManager.openUrl(UrlManager.sharedInstance().linkReceived);
+          UrlManager.openSafari(UrlManager.sharedInstance().linkReceived);
         })
       ],
     ));
